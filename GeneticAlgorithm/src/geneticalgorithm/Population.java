@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public class Population {
     private final ArrayList <ArrayList <Integer>> _population;
+    private final ArrayList <Double> _fitness; // The evaluate value of each chromosome in population
     
     Population(int populationSize, int initializeGeneOption) {
-        _population = new ArrayList <>();
+        this._population = new ArrayList <>();
+        this._fitness = new ArrayList <>();
         initializePopulation(populationSize, initializeGeneOption);
     }
     
@@ -30,10 +32,32 @@ public class Population {
             }
         }
             
-        for (short i = 0; i < populationSize; i++) {
+        for (short i = 0; i < populationSize; i++)
             this._population.add(chromosome);
-        }
         
         return true;
     }
+    
+    
+    public boolean calculateFitness(String fitnessFunctionOption) {
+        for (short i = 0; i < this._population.size(); i++) {
+            switch (fitnessFunctionOption) {
+                case "step_function" ->  {
+                    double sum = 0.0;
+                    for (short j = 0; j < this._population.get(i).size(); j++)
+                        sum += this._population.get(i).get(j);
+                    this._fitness.add((sum >= 0 ? 1.0 : 0.0));
+                }
+                default ->  { // Step_function
+                    double sum = 0.0;
+                    for (short j = 0; j < this._population.get(i).size(); j++)
+                        sum += this._population.get(i).get(j);
+                    this._fitness.add((sum >= 0 ? 1.0 : 0.0));
+                }
+            }
+        }
+  
+        return true;
+    }
+    
 }
