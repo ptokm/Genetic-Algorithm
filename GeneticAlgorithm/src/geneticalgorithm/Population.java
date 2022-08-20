@@ -1,63 +1,116 @@
 package geneticalgorithm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Population {
-    private final ArrayList <ArrayList <Integer>> _population;
-    private final ArrayList <Double> _fitness; // The evaluate value of each chromosome in population
+    /**
+     * _population: Chromosomes (size: geneSize),
+                    fitness { The evaluate value of each chromosome in population } , 
+                    normalizateFitness
+                    cumulativeSum     
+     */
+    private final ArrayList <ArrayList <Double>> _population;
+    private int _countOfGeneOfChromosome = -1;
     
-    Population(int populationSize, int initializeGeneOption) {
+    Population(int populationSize, int geneSize,  String initializeGeneOption) {
         this._population = new ArrayList <>();
-        this._fitness = new ArrayList <>();
+        this._countOfGeneOfChromosome = geneSize;
         initializePopulation(populationSize, initializeGeneOption);
     }
     
-    private boolean initializePopulation(int populationSize, int initializeGeneOption) {
-        ArrayList <Integer> chromosome = new ArrayList <>();
-        switch (initializeGeneOption) {
-            case 0 -> {
-                chromosome.add(0);
-                chromosome.add(0);
-                break;
+    // Initialization can be either all genes in same specific double value
+    // or in ramdom values
+    private boolean initializePopulation(int populationSize, String initializeGeneOption) {
+        if (!initializeGeneOption.equals("random")) {
+            double initializationValue;
+            try {
+                initializationValue = Double.parseDouble(initializeGeneOption);
+            } catch(NumberFormatException e) {
+                 initializationValue = 0.0;
             }
-            case 1 -> {
-                chromosome.add(1);
-                chromosome.add(1);
-                break;
+            
+            ArrayList <Double> chromosome = new ArrayList <>();
+            for (short i = 0; i < this._countOfGeneOfChromosome; i++) {
+                chromosome.add(initializationValue);
             }
-            default -> {
-                chromosome.add(0);
-                chromosome.add(0);
-                break;
+            
+            for (short i = 0; i < populationSize; i++)
+                this._population.add(chromosome);
+        } else {
+            for (short i = 0; i < populationSize; i++) {
+                ArrayList <Double> chromosome = new ArrayList <>();
+                double random1 = Math.random();
+                double random2 = Math.random();
+                chromosome.add((random1 > 0.5) ? 1.0 : 0.0);
+                chromosome.add((random2 > 0.5) ? 1.0 : 0.0);
+                this._population.add(chromosome);
             }
         }
-            
-        for (short i = 0; i < populationSize; i++)
-            this._population.add(chromosome);
         
         return true;
     }
     
-    
     public boolean calculateFitness(String fitnessFunctionOption) {
-        for (short i = 0; i < this._population.size(); i++) {
-            switch (fitnessFunctionOption) {
-                case "step_function" ->  {
-                    double sum = 0.0;
-                    for (short j = 0; j < this._population.get(i).size(); j++)
-                        sum += this._population.get(i).get(j);
-                    this._fitness.add((sum >= 0 ? 1.0 : 0.0));
+        switch (fitnessFunctionOption) {
+                case "sumation_of_genes" ->  {
+                    for (short i = 0; i < this._population.size(); i++) {
+                        ArrayList <Double> temp = new ArrayList <> (this._population.get(i));
+                        double sum = 0.0;
+                        for (short j = 0; j < temp.size(); j++) {
+                            sum += temp.get(j);
+                        }
+                        temp.add(sum);
+                        this._population.set(i, temp);
+                    }
+                    
+                    break;
                 }
-                default ->  { // Step_function
-                    double sum = 0.0;
-                    for (short j = 0; j < this._population.get(i).size(); j++)
-                        sum += this._population.get(i).get(j);
-                    this._fitness.add((sum >= 0 ? 1.0 : 0.0));
+                default ->  { // sumation_of_genes
+                    for (short i = 0; i < this._population.size(); i++) {
+                        ArrayList <Double> temp = new ArrayList <> (this._population.get(i));
+                        double sum = 0.0;
+                        for (short j = 0; j < temp.size(); j++) {
+                            sum += temp.get(j);
+                        }
+                        temp.add(sum);
+                        this._population.set(i, temp);
+                    }
+                    break;
                 }
             }
-        }
-  
+                       
         return true;
     }
     
+    public boolean validateNormalizedFitnessValues() {
+        double sumNormalizedFitnessValue = 0.0;
+        for (ArrayList <Double> chromosome : this._population)
+            sumNormalizedFitnessValue += chromosome.get(this._countOfGeneOfChromosome + 1);
+        
+        return (sumNormalizedFitnessValue >= 0.9999999999999999);
+    }
+    
+    // Devide the fitness value of each chromosome
+    // by the total values of all fitnesses
+    public boolean normalizeFitnessValues() {
+        double sumFitnessValue = 0.0;
+        for (ArrayList <Double> chromosome : this._population) {
+            sumFitnessValue += chromosome.get(this._countOfGeneOfChromosome);
+        }
+
+        for (short i = 0; i < this._population.size(); i++) {
+            ArrayList <Double> inner = new ArrayList <> (this._population.get(i));
+            inner.add(inner.get(this._countOfGeneOfChromosome) / sumFitnessValue);
+            this._population.set(i, inner);
+        }
+             
+        if (this.validateNormalizedFitnessValues()) {
+            Collections.sort(this._population, Collections.reverseOrder((a, b) -> Double.compare(a.get(this._countOfGeneOfChromosome + 1), b.get(this._countOfGeneOfChromosome + 1))));
+            return true;
+        }
+        
+        return false;
+    }
+     
 }
