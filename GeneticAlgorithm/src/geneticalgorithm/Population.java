@@ -88,7 +88,7 @@ public class Population {
         for (ArrayList <Double> chromosome : this._population)
             sumNormalizedFitnessValue += chromosome.get(this._countOfGeneOfChromosome + 1);
         
-        return (sumNormalizedFitnessValue >= 0.9999999999999999);
+        return (sumNormalizedFitnessValue == 1.0);
     }
     
     // Devide the fitness value of each chromosome
@@ -112,5 +112,38 @@ public class Population {
         
         return false;
     }
-     
+    
+    public boolean calculateCumulativeSumOfNormalizedFitnessValues() {
+        for (int i = 0; i < this._population.size(); i++) {
+            ArrayList <Double> temp = new ArrayList <>(this._population.get(i));
+            double sum = temp.get(this._countOfGeneOfChromosome + 1);
+            for (int j = (i + 1); j < this._population.size(); j++) {
+                sum += this._population.get(j).get(this._countOfGeneOfChromosome + 1);
+            }
+            temp.add(sum);
+            this._population.set(i, temp);
+        }
+        
+        return (this._population.get(0).get(this._countOfGeneOfChromosome + 2) >= 1.0);
+    }
+    
+    public boolean selectChromosomes(int numberOfSelection ) {
+        ArrayList <ArrayList <Double>> selectedChromosomes = new ArrayList <>();
+        ArrayList <ArrayList <Double>> tempPopulation = new ArrayList <>(this._population);
+        
+        for (short i = 0; i < numberOfSelection; i++) {
+            Double random = Math.random(); // Random value in [0,1]
+            
+            for (short j = 0; j < tempPopulation.size(); j++) {
+                if (random > tempPopulation.get(j).get(this._countOfGeneOfChromosome + 1)) {
+                    selectedChromosomes.add(tempPopulation.get(j));
+                    tempPopulation.remove(j);
+                    break;
+                }     
+            }
+        }
+        
+        return (!selectedChromosomes.isEmpty());
+    }
+    
 }
