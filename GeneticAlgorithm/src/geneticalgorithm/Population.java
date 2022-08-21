@@ -95,6 +95,29 @@ public class Population {
         return (sumNormalizedFitnessValue == 1.0);
     }
     
+    private boolean fitnessScaling() {
+        boolean hasNegativeFitnessValue = false;
+        for (ArrayList <Double> chromosome : this._population)
+            if (chromosome.get(this._countOfGeneOfChromosome) < 0)
+                hasNegativeFitnessValue = true;
+        
+        if (hasNegativeFitnessValue) {
+            double minFitnessValue = this._population.get(0).get(this._countOfGeneOfChromosome);
+            for (short i = 0; i < this._population.size(); i++) {
+                if (this._population.get(i).get(this._countOfGeneOfChromosome) < minFitnessValue)
+                    minFitnessValue = this._population.get(i).get(this._countOfGeneOfChromosome);
+            }
+            
+            minFitnessValue = Math.abs(minFitnessValue);
+            for (short i = 0; i < this._population.size(); i++) {
+                double scaledFitnessValue = 1.0 * this._population.get(i).get(this._countOfGeneOfChromosome) + minFitnessValue + 1; // +1 to avoid devide by zero after
+                this._population.get(i).set(this._countOfGeneOfChromosome, scaledFitnessValue);
+            }
+        }
+        
+        return true;
+    }
+    
     // Devide the fitness value of each chromosome
     // by the total values of all fitnesses
     private boolean normalizeFitnessValues() {
@@ -151,6 +174,7 @@ public class Population {
     }
     
     public boolean rouletteWheel(int numberOfChromosomesToBeSelected) {
+        this.fitnessScaling();
         this.normalizeFitnessValues();
         this.calculateCumulativeSumOfNormalizedFitnessValues();
         this.selectChromosomes(numberOfChromosomesToBeSelected);
