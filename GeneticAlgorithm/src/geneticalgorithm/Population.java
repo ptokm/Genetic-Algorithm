@@ -13,10 +13,12 @@ public class Population {
     private final ArrayList <ArrayList <Double>> _population;
     private int _countOfGeneOfChromosome = -1;
     
-    Population(int populationSize, int geneSize,  String initializeGeneOption) {
+    Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessFunctionOption) {
         this._population = new ArrayList <>();
         this._countOfGeneOfChromosome = geneSize;
-        initializePopulation(populationSize, initializeGeneOption);
+        
+        this.initializePopulation(populationSize, initializeGeneOption);
+        this.calculateFitness("sumation_of_genes");
     }
     
     // Initialization can be either all genes in same specific double value
@@ -51,7 +53,7 @@ public class Population {
         return true;
     }
     
-    public boolean calculateFitness(String fitnessFunctionOption) {
+    private boolean calculateFitness(String fitnessFunctionOption) {
         switch (fitnessFunctionOption) {
                 case "sumation_of_genes" ->  {
                     for (short i = 0; i < this._population.size(); i++) {
@@ -83,7 +85,7 @@ public class Population {
         return true;
     }
     
-    public boolean validateNormalizedFitnessValues() {
+    private boolean validateNormalizedFitnessValues() {
         double sumNormalizedFitnessValue = 0.0;
         for (ArrayList <Double> chromosome : this._population)
             sumNormalizedFitnessValue += chromosome.get(this._countOfGeneOfChromosome + 1);
@@ -93,7 +95,7 @@ public class Population {
     
     // Devide the fitness value of each chromosome
     // by the total values of all fitnesses
-    public boolean normalizeFitnessValues() {
+    private boolean normalizeFitnessValues() {
         double sumFitnessValue = 0.0;
         for (ArrayList <Double> chromosome : this._population) {
             sumFitnessValue += chromosome.get(this._countOfGeneOfChromosome);
@@ -113,7 +115,7 @@ public class Population {
         return false;
     }
     
-    public boolean calculateCumulativeSumOfNormalizedFitnessValues() {
+    private boolean calculateCumulativeSumOfNormalizedFitnessValues() {
         for (int i = 0; i < this._population.size(); i++) {
             ArrayList <Double> temp = new ArrayList <>(this._population.get(i));
             double sum = temp.get(this._countOfGeneOfChromosome + 1);
@@ -127,7 +129,7 @@ public class Population {
         return (this._population.get(0).get(this._countOfGeneOfChromosome + 2) >= 1.0);
     }
     
-    public boolean selectChromosomes(int numberOfSelection ) {
+    private boolean selectChromosomes(int numberOfSelection ) {
         ArrayList <ArrayList <Double>> selectedChromosomes = new ArrayList <>();
         ArrayList <ArrayList <Double>> tempPopulation = new ArrayList <>(this._population);
         
@@ -146,4 +148,11 @@ public class Population {
         return (!selectedChromosomes.isEmpty());
     }
     
+    public boolean rouletteWheel(int numberOfChromosomesToBeSelected) {
+        this.normalizeFitnessValues();
+        this.calculateCumulativeSumOfNormalizedFitnessValues();
+        this.selectChromosomes(numberOfChromosomesToBeSelected);
+        return true;
+    }
+
 }

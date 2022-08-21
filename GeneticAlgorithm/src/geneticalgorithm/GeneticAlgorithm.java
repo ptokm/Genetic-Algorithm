@@ -7,12 +7,8 @@ package geneticalgorithm;
 public class GeneticAlgorithm {
 
     public static void main(String[] args) {
-        Population population = new Population(10, 2, "random");
-        population.calculateFitness("sumation_of_genes");
-        if (population.normalizeFitnessValues() && population.calculateCumulativeSumOfNormalizedFitnessValues()) {
-            population.selectChromosomes(2);
-        }
-        
+        Population population = new Population(10, 2, "random", "sumation_of_genes");
+        population.rouletteWheel(2);
     }
     
 }
