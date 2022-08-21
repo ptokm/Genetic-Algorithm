@@ -2,6 +2,7 @@ package geneticalgorithm;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class Population {
     /**
@@ -33,19 +34,20 @@ public class Population {
             }
             
             ArrayList <Double> chromosome = new ArrayList <>();
-            for (short i = 0; i < this._countOfGeneOfChromosome; i++) {
+            for (short i = 0; i < this._countOfGeneOfChromosome; i++)
                 chromosome.add(initializationValue);
-            }
             
             for (short i = 0; i < populationSize; i++)
                 this._population.add(chromosome);
         } else {
+            // Need random numbers in [min, max]
+            int min = -1;
+            int max = 1;
             for (short i = 0; i < populationSize; i++) {
                 ArrayList <Double> chromosome = new ArrayList <>();
-                double random1 = Math.random();
-                double random2 = Math.random();
-                chromosome.add((random1 > 0.5) ? 1.0 : 0.0);
-                chromosome.add((random2 > 0.5) ? 1.0 : 0.0);
+                Random r = new Random();
+                for (short j = 0; j < this._countOfGeneOfChromosome; j++)
+                    chromosome.add(r.nextDouble((max - min) + 1) + min);
                 this._population.add(chromosome);
             }
         }
