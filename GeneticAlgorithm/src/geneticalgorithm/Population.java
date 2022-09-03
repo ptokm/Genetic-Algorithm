@@ -12,6 +12,7 @@ public class Population {
                     cumulativeSum     
      */
     private final ArrayList <ArrayList <Double>> _population;
+    private ArrayList <ArrayList <Double>> _selectedPopulation;
     private int _countOfGeneOfChromosome = -1;
     
     Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessFunctionOption) {
@@ -155,7 +156,7 @@ public class Population {
     }
     
     private boolean selectChromosomes(int numberOfSelection ) {
-        ArrayList <ArrayList <Double>> selectedChromosomes = new ArrayList <>();
+        this._selectedPopulation = new ArrayList <>();
         ArrayList <ArrayList <Double>> tempPopulation = new ArrayList <>(this._population);
         
         for (short i = 0; i < numberOfSelection; i++) {
@@ -163,14 +164,14 @@ public class Population {
             
             for (short j = 0; j < tempPopulation.size(); j++) {
                 if (random > tempPopulation.get(j).get(this._countOfGeneOfChromosome + 1)) {
-                    selectedChromosomes.add(tempPopulation.get(j));
+                    this._selectedPopulation.add(tempPopulation.get(j));
                     tempPopulation.remove(j);
                     break;
                 }     
             }
         }
         
-        return (!selectedChromosomes.isEmpty());
+        return (!this._selectedPopulation.isEmpty());
     }
     
     public boolean rouletteWheel(int numberOfChromosomesToBeSelected) {
@@ -181,4 +182,89 @@ public class Population {
         return true;
     }
 
+    //Produce 2 childrens from 2 parents
+    public boolean crossover(String crossoverOption) {
+        Random r = new Random();
+        int min = 1;
+        int max = this._countOfGeneOfChromosome - 1;
+        int randomGenePosition = r.nextInt((max - min) + 1) + min;
+        
+        switch (crossoverOption) {
+            case "single_point" ->  {
+                ArrayList <ArrayList <Double>> childrens = new ArrayList <>();
+                ArrayList <Double> child1 = new ArrayList <>();
+                ArrayList <Double> child2 = new ArrayList <>();
+               
+                for (short i = 0; i < randomGenePosition; i++) {
+                    child1.add(this._selectedPopulation.get(0).get(i));
+                    child2.add(this._selectedPopulation.get(1).get(i));
+                }
+                for (int i = randomGenePosition; i < this._countOfGeneOfChromosome; i++) {
+                    child1.add(this._selectedPopulation.get(1).get(i));
+                    child2.add(this._selectedPopulation.get(0).get(i));
+                }
+                
+                childrens.add(child1);
+                childrens.add(child2);
+                
+                break;
+            }
+            case "double_point" -> {
+                int secondRandomGenePosition = randomGenePosition;
+                        
+                while (secondRandomGenePosition == randomGenePosition) {
+                    secondRandomGenePosition = r.nextInt((max - min) + 1) + min;
+                }
+                
+                if (secondRandomGenePosition < randomGenePosition) {
+                    int temp = randomGenePosition;
+                    randomGenePosition = secondRandomGenePosition;
+                    secondRandomGenePosition = temp;
+                }
+                
+                ArrayList <ArrayList <Double>> childrens = new ArrayList <>();
+                ArrayList <Double> child1 = new ArrayList <>();
+                ArrayList <Double> child2 = new ArrayList <>();
+                
+                for (short i = 0; i < randomGenePosition; i++) {
+                    child1.add(this._selectedPopulation.get(0).get(i));
+                    child2.add(this._selectedPopulation.get(1).get(i));
+                }
+                for (int i = randomGenePosition; i < secondRandomGenePosition; i++) {
+                    child1.add(this._selectedPopulation.get(1).get(i));
+                    child2.add(this._selectedPopulation.get(0).get(i));
+                }
+                for (int i = secondRandomGenePosition; i < this._countOfGeneOfChromosome; i++) {
+                    child1.add(this._selectedPopulation.get(0).get(i));
+                    child2.add(this._selectedPopulation.get(1).get(i));
+                }
+                
+                childrens.add(child1);
+                childrens.add(child2);
+                
+                break;
+            }
+            default ->  { // single_point
+                ArrayList <ArrayList <Double>> childrens = new ArrayList <>();
+                ArrayList <Double> child1 = new ArrayList <>();
+                ArrayList <Double> child2 = new ArrayList <>();
+               
+                for (short i = 0; i < randomGenePosition; i++) {
+                    child1.add(this._selectedPopulation.get(0).get(i));
+                    child2.add(this._selectedPopulation.get(1).get(i));
+                }
+                for (int i = randomGenePosition; i < this._countOfGeneOfChromosome; i++) {
+                    child1.add(this._selectedPopulation.get(1).get(i));
+                    child2.add(this._selectedPopulation.get(0).get(i));
+                }
+                
+                childrens.add(child1);
+                childrens.add(child2);
+                
+                break;
+            }
+        }
+        return true;
+    }
+    
 }
