@@ -13,6 +13,7 @@ public class Population {
      */
     private final ArrayList <ArrayList <Double>> _population;
     private ArrayList <ArrayList <Double>> _selectedPopulation;
+    private ArrayList <ArrayList <Double>> _childrens;
     private int _countOfGeneOfChromosome = -1;
     
     Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessFunctionOption) {
@@ -179,7 +180,6 @@ public class Population {
     }
 
     public boolean singlePointCrossover(int randomGenePosition) {
-        ArrayList <ArrayList <Double>> childrens = new ArrayList <>();
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
@@ -192,15 +192,13 @@ public class Population {
             child2.add(this._selectedPopulation.get(0).get(i));
         }
 
-        childrens.add(child1);
-        childrens.add(child2);
+        this._childrens.add(child1);
+        this._childrens.add(child2);
         
         return true;
     }
     
     public boolean doublePointCrossover(int randomGenePosition, int secondRandomGenePosition) {
-      
-        ArrayList <ArrayList <Double>> childrens = new ArrayList <>();
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
@@ -217,14 +215,20 @@ public class Population {
             child2.add(this._selectedPopulation.get(1).get(i));
         }
 
-        childrens.add(child1);
-        childrens.add(child2);
+        this._childrens.add(child1);
+        this._childrens.add(child2);
         
         return true;
     }
     
     //Produce 2 childrens from 2 parents
     public boolean crossover(String crossoverOption) {
+        if (this._countOfGeneOfChromosome <= 2 && crossoverOption.equals("double_point")) {
+            System.out.println("Cannot use double point crossover. The number of chromosomes' genes is not sufficient.");
+            return false;
+        }
+        
+        this._childrens = new ArrayList<>();
         Random r = new Random();
         int min = 1;
         int max = this._countOfGeneOfChromosome - 1;
