@@ -11,7 +11,7 @@ public class Population {
                     normalizateFitness
                     cumulativeSum     
      */
-    private final ArrayList <ArrayList <Double>> _population;
+    private ArrayList <ArrayList <Double>> _population;
     private ArrayList <ArrayList <Double>> _selectedPopulation;
     private ArrayList <ArrayList <Double>> _childrens;
     private int _countOfGeneOfChromosome = -1;
@@ -41,6 +41,8 @@ public class Population {
             
             for (short i = 0; i < populationSize; i++)
                 this._population.add(chromosome);
+            
+            this._population = this.mutation(this._population);
         } else {
             // Need random numbers in [min, max]
             int min = -1;
@@ -279,6 +281,25 @@ public class Population {
         }
         
         return true;
+    }
+    
+    public ArrayList <ArrayList <Double>> mutation(ArrayList <ArrayList <Double>> chromosomes) {
+        Random r = new Random();
+        Double probability_of_mutation = r.nextDouble();
+        
+        ArrayList <ArrayList <Double>> mutationChildrens = new ArrayList <>();
+        for (short i = 0; i < chromosomes.size(); i++) {
+            ArrayList <Double> temp = new ArrayList <>(chromosomes.get(i));
+            for (short j = 0; j < temp.size(); j++) {
+                Double random = r.nextDouble();
+                if (random < probability_of_mutation)
+                    temp.set(j, -1.0);
+            }
+            
+            mutationChildrens.add(temp);
+        }
+        
+        return mutationChildrens;
     }
     
 }
