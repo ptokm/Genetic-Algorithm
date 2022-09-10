@@ -10,6 +10,7 @@ public class GeneticAlgorithm {
         Population population = new Population(10, 2, "random", "sumation_of_genes");
         population.rouletteWheel(2);
         population.crossover("single_point");
+        population.mutation();
     }
     
 }

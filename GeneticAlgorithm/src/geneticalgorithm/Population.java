@@ -263,4 +263,22 @@ public class Population {
         return true;
     }
     
+    public boolean mutation() {
+        Random r = new Random();
+        Double probability_of_mutation = r.nextDouble();
+        
+        ArrayList <ArrayList <Double>> mutationChildrens = new ArrayList <>();
+        for (short i = 0; i < this._childrens.size(); i++) {
+            ArrayList <Double> temp = new ArrayList <>(this._childrens.get(i));
+            for (short j = 0; j < temp.size(); j++) {
+                Double random = r.nextDouble();
+                if (random < probability_of_mutation)
+                    temp.set(j, -1.0);
+            }
+            mutationChildrens.add(temp);
+        }
+        
+        return true;
+    }
+    
 }
