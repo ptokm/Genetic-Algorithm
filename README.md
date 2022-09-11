@@ -13,7 +13,9 @@ where Chromosome -->
 That's for a simple example is a sum of each gene of specific chromosome
 
 
-### Step 3: Use roulette wheel 
+### Step 3: Selection
+
+                                                         Roulette wheel
 
 3.1 Fitness Scaling 
      
@@ -43,3 +45,11 @@ That's for a simple example is a sum of each gene of specific chromosome
 
         * If that random value > cumulative_sum_of_some_chromosome Then
            Take that Chromosome
+
+### Step 4: Crossover
+
+For the selected chromosomes, do crossover with random single or double points and produce childs
+
+### Step 5: Mutation
+
+For the produced children's, randomly change some genes
