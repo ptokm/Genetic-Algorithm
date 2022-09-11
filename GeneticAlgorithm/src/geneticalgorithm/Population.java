@@ -27,7 +27,7 @@ public class Population {
     // Initialization can be either all genes in same specific double value
     // or in ramdom values
     private boolean initializePopulation(int populationSize, String initializeGeneOption) {
-        if (!initializeGeneOption.equals("random")) {
+        if (initializeGeneOption.equals("0") || initializeGeneOption.equals("1")) {
             double initializationValue;
             try {
                 initializationValue = Double.parseDouble(initializeGeneOption);
@@ -44,14 +44,13 @@ public class Population {
             
             this._population = this.mutation(this._population);
         } else {
-            // Need random numbers in [min, max]
-            int min = -1;
+            int min = 0;
             int max = 1;
             for (short i = 0; i < populationSize; i++) {
                 ArrayList <Double> chromosome = new ArrayList <>();
                 Random r = new Random();
                 for (short j = 0; j < this._countOfGeneOfChromosome; j++)
-                    chromosome.add(r.nextDouble((max - min) + 1) + min);
+                    chromosome.add((r.nextDouble((max - min) + 1) + min >= 0.5) ? 1.0 : 0.0);
                 this._population.add(chromosome);
             }
         }
