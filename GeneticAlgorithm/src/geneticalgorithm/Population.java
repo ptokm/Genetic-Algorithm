@@ -132,7 +132,7 @@ public class Population {
         }
         
         if (this.validateNormalizedFitnessValues()) {
-            Collections.sort(this._population, Collections.reverseOrder((a, b) -> Double.compare(a.get(this._countOfGeneOfChromosome + 1), b.get(this._countOfGeneOfChromosome + 1))));
+            Collections.sort(this._population, Collections.reverseOrder((a, b) -> Double.compare(a.get(this._countOfGeneOfChromosome), b.get(this._countOfGeneOfChromosome))));
             return true;
         }
         
