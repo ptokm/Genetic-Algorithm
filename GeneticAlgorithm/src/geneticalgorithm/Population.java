@@ -16,11 +16,14 @@ public class Population {
     private ArrayList <ArrayList <Double>> _childrens;
     private final int _countOfGeneOfChromosome;
     private final Double _elitism_ratio;
+    private Double _probability_of_mutation;
+    private final int _maxEpoches;
     
     Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessFunctionOption) {
         this._population = new ArrayList <>();
         this._countOfGeneOfChromosome = geneSize;
         this._elitism_ratio = 0.1;
+        this._maxEpoches = 1;
         
         this.initializePopulation(populationSize, initializeGeneOption);
         this.calculateFitness(fitnessFunctionOption);
@@ -71,7 +74,6 @@ public class Population {
             this._population.set(i, temp);
         }
         
-        System.out.println("--> "+this._population);
         return true;
     }
     
@@ -86,7 +88,6 @@ public class Population {
             this._population.set(i, temp);
         }
         
-        System.out.println("--> "+this._population);
         return true;
     }
     
@@ -110,10 +111,12 @@ public class Population {
     }
     
     public boolean startOptimization(String crossoverFunction) {
-        this.rouletteWheel(2);
-        this.crossover(crossoverFunction);
-        this.mutation();
-        this.elitism();
+        for (short i = 0; i < this._maxEpoches; i++) {
+            this.rouletteWheel(2);
+            this.crossover(crossoverFunction);
+            this.mutation();
+            this.elitism();   
+        }
         
         return true;
     }
@@ -298,14 +301,14 @@ public class Population {
     
     private boolean mutation() {
         Random r = new Random();
-        Double probability_of_mutation = r.nextDouble();
+        this._probability_of_mutation = r.nextDouble();
         
         ArrayList <ArrayList <Double>> mutationChildrens = new ArrayList <>();
         for (short i = 0; i < this._childrens.size(); i++) {
             ArrayList <Double> temp = new ArrayList <>(this._childrens.get(i));
             for (short j = 0; j < temp.size(); j++) {
                 Double random = r.nextDouble();
-                if (random < probability_of_mutation)
+                if (random < this._probability_of_mutation)
                     temp.set(j, (temp.get(j) == 0.0 ? 1.0 : 0.0));
             }
             mutationChildrens.add(temp);
