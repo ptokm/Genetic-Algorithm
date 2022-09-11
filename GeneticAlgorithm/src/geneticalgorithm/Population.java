@@ -86,6 +86,15 @@ public class Population {
         return true;
     }
     
+    public boolean startOptimization(String crossoverFunction) {
+        this.rouletteWheel(2);
+        this.crossover(crossoverFunction);
+        this.mutation();
+        this.elitism();
+        
+        return true;
+    }
+    
     private boolean validateNormalizedFitnessValues() {
         double sumNormalizedFitnessValue = 0.0;
         for (ArrayList <Double> chromosome : this._population)
