@@ -274,7 +274,7 @@ public class Population {
             for (short j = 0; j < temp.size(); j++) {
                 Double random = r.nextDouble();
                 if (random < probability_of_mutation)
-                    temp.set(j, -1.0);
+                    temp.set(j, (temp.get(j) == 0.0 ? 1.0 : 0.0));
             }
             mutationChildrens.add(temp);
         }
@@ -292,7 +292,7 @@ public class Population {
             for (short j = 0; j < temp.size(); j++) {
                 Double random = r.nextDouble();
                 if (random < probability_of_mutation)
-                    temp.set(j, -1.0);
+                    temp.set(j, (temp.get(j) == 0.0 ? 1.0 : 0.0));
             }
             
             mutationChildrens.add(temp);
