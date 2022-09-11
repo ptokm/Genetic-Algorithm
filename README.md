@@ -53,3 +53,7 @@ For the selected chromosomes, do crossover with random single or double points a
 ### Step 5: Mutation
 
 For the produced children's, randomly change some genes
+
+### Step 6: Elitism
+
+Choose the best x chromosomes from the previous epoch and transfer them to the next epoch without crossover/mutation/elitism
