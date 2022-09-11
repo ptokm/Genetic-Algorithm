@@ -301,4 +301,18 @@ public class Population {
         return mutationChildrens;
     }
     
+    public boolean elitism() {
+        Double elitism_ratio = 0.1;
+        
+        Double x = this._population.size() * elitism_ratio;
+        int number_of_elitism_chromosomes = x.intValue();
+
+        ArrayList <ArrayList <Double>> elitismPopulation = new ArrayList <>();
+        for (short i = 0; i < number_of_elitism_chromosomes; i++) {
+            elitismPopulation.add(this._population.get(i));
+        }
+        
+        return true;
+    }
+    
 }

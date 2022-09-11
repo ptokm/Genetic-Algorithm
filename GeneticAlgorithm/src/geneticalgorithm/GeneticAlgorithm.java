@@ -11,6 +11,7 @@ public class GeneticAlgorithm {
         population.rouletteWheel(2);
         population.crossover("single_point");
         population.mutation();
+        population.elitism();
     }
     
 }
