@@ -34,18 +34,28 @@ public class GeneticAlgorithm {
                 default -> initializeGenesOption = "random";
             }
 
+            System.out.println("Enter the appropriate number from the list to select the fitness function to use:");
+            System.out.println("1 - sumation of genes");
+            System.out.println("2 - sumation of square genes");
+            String fitnessFunctionOption;
+            switch (scanner.nextInt()) {
+                case 1  -> fitnessFunctionOption = "sumation_of_genes";
+                case 2  -> fitnessFunctionOption = "sumation_of_square_genes";
+                default -> fitnessFunctionOption = "sumation_of_genes";
+            }
+            
             System.out.println("Enter the appropriate number from the list to select the crossover function to use:");
             System.out.println("1 - single point");
             System.out.println("2 - double point");
-            String crossoverFunction;
+            String crossoverFunctionOption;
             switch (scanner.nextInt()) {
-                case 1  -> crossoverFunction = "single_point";
-                case 2  -> crossoverFunction = "double_point";
-                default -> crossoverFunction = "single_point";
+                case 1  -> crossoverFunctionOption = "single_point";
+                case 2  -> crossoverFunctionOption = "double_point";
+                default -> crossoverFunctionOption = "single_point";
             }
 
-            Population population = new Population(chromosomesCount, genesCount, initializeGenesOption, "sumation_of_genes");
-            population.startOptimization(crossoverFunction);
+            Population population = new Population(chromosomesCount, genesCount, initializeGenesOption, fitnessFunctionOption);
+            population.startOptimization(crossoverFunctionOption);
         }
         catch (InputMismatchException e)
         {

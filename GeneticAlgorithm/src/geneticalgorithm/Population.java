@@ -23,7 +23,7 @@ public class Population {
         this._elitism_ratio = 0.1;
         
         this.initializePopulation(populationSize, initializeGeneOption);
-        this.calculateFitness("sumation_of_genes");
+        this.calculateFitness(fitnessFunctionOption);
     }
     
     // Initialization can be either all genes in same specific double value
@@ -71,6 +71,22 @@ public class Population {
             this._population.set(i, temp);
         }
         
+        System.out.println("--> "+this._population);
+        return true;
+    }
+    
+    private boolean sumationOfSquareGenesFitness() {
+        for (short i = 0; i < this._population.size(); i++) {
+            ArrayList <Double> temp = new ArrayList <> (this._population.get(i));
+            double sum = 0.0;
+            for (short j = 0; j < temp.size(); j++) {
+                sum += Math.pow(temp.get(j), 2);
+            }
+            temp.add(sum);
+            this._population.set(i, temp);
+        }
+        
+        System.out.println("--> "+this._population);
         return true;
     }
     
@@ -78,6 +94,10 @@ public class Population {
         switch (fitnessFunctionOption) {
                 case "sumation_of_genes" ->  {                   
                     this.sumationOfGenesFitness();
+                    break;
+                }
+                case "sumation_of_square_genes" -> {
+                    this.sumationOfSquareGenesFitness();
                     break;
                 }
                 default ->  { // sumation_of_genes
