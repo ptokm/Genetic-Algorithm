@@ -15,10 +15,12 @@ public class Population {
     private ArrayList <ArrayList <Double>> _selectedPopulation;
     private ArrayList <ArrayList <Double>> _childrens;
     private final int _countOfGeneOfChromosome;
+    private final Double _elitism_ratio;
     
     Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessFunctionOption) {
         this._population = new ArrayList <>();
         this._countOfGeneOfChromosome = geneSize;
+        this._elitism_ratio = 0.1;
         
         this.initializePopulation(populationSize, initializeGeneOption);
         this.calculateFitness("sumation_of_genes");
@@ -71,6 +73,7 @@ public class Population {
         
         return true;
     }
+    
     private boolean calculateFitness(String fitnessFunctionOption) {
         switch (fitnessFunctionOption) {
                 case "sumation_of_genes" ->  {                   
@@ -181,7 +184,7 @@ public class Population {
         return (!this._selectedPopulation.isEmpty());
     }
     
-    public boolean rouletteWheel(int numberOfChromosomesToBeSelected) {
+    private boolean rouletteWheel(int numberOfChromosomesToBeSelected) {
         this.fitnessScaling();
         this.normalizeFitnessValues();
         this.calculateCumulativeSumOfNormalizedFitnessValues();
@@ -189,7 +192,7 @@ public class Population {
         return true;
     }
 
-    public boolean singlePointCrossover(int randomGenePosition) {
+    private boolean singlePointCrossover(int randomGenePosition) {
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
@@ -208,7 +211,7 @@ public class Population {
         return true;
     }
     
-    public boolean doublePointCrossover(int randomGenePosition, int secondRandomGenePosition) {
+    private boolean doublePointCrossover(int randomGenePosition, int secondRandomGenePosition) {
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
@@ -232,7 +235,7 @@ public class Population {
     }
     
     //Produce 2 childrens from 2 parents
-    public boolean crossover(String crossoverOption) {
+    private boolean crossover(String crossoverOption) {
         if (this._countOfGeneOfChromosome <= 2 && crossoverOption.equals("double_point")) {
             System.out.println("Cannot use double point crossover. The number of chromosomes' genes is not sufficient.");
             return false;
@@ -273,7 +276,7 @@ public class Population {
         return true;
     }
     
-    public boolean mutation() {
+    private boolean mutation() {
         Random r = new Random();
         Double probability_of_mutation = r.nextDouble();
         
@@ -291,7 +294,7 @@ public class Population {
         return true;
     }
     
-    public ArrayList <ArrayList <Double>> mutation(ArrayList <ArrayList <Double>> chromosomes) {
+    private ArrayList <ArrayList <Double>> mutation(ArrayList <ArrayList <Double>> chromosomes) {
         Random r = new Random();
         Double probability_of_mutation = r.nextDouble();
         
@@ -310,10 +313,8 @@ public class Population {
         return mutationChildrens;
     }
     
-    public boolean elitism() {
-        Double elitism_ratio = 0.1;
-        
-        Double x = this._population.size() * elitism_ratio;
+    private boolean elitism() {
+        Double x = this._population.size() * this._elitism_ratio;
         int number_of_elitism_chromosomes = x.intValue();
 
         ArrayList <ArrayList <Double>> elitismPopulation = new ArrayList <>();
