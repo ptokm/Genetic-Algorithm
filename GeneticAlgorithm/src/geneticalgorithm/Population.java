@@ -14,7 +14,7 @@ public class Population {
     private ArrayList <ArrayList <Double>> _population;
     private ArrayList <ArrayList <Double>> _selectedPopulation;
     private ArrayList <ArrayList <Double>> _childrens;
-    private int _countOfGeneOfChromosome = -1;
+    private final int _countOfGeneOfChromosome;
     
     Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessFunctionOption) {
         this._population = new ArrayList <>();
@@ -130,7 +130,7 @@ public class Population {
             inner.add(inner.get(this._countOfGeneOfChromosome) / sumFitnessValue);
             this._population.set(i, inner);
         }
-             
+        
         if (this.validateNormalizedFitnessValues()) {
             Collections.sort(this._population, Collections.reverseOrder((a, b) -> Double.compare(a.get(this._countOfGeneOfChromosome + 1), b.get(this._countOfGeneOfChromosome + 1))));
             return true;
