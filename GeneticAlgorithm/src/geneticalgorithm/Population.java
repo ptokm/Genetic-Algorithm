@@ -114,7 +114,7 @@ public class Population {
         for (short i = 0; i < this._maxEpoches; i++) {
             this.rouletteWheel(2);
             this.crossover(crossoverFunction);
-            this.mutation();
+            this._population = this.mutation(this._population);
             this.elitism();   
         }
         
@@ -299,41 +299,22 @@ public class Population {
         return true;
     }
     
-    private boolean mutation() {
+    private ArrayList <ArrayList <Double>> mutation(ArrayList <ArrayList <Double>> chromosomes) {
+        ArrayList <ArrayList <Double>> mutatedChromosomes = new ArrayList <>();
         Random r = new Random();
         this._probability_of_mutation = r.nextDouble();
         
-        ArrayList <ArrayList <Double>> mutationChildrens = new ArrayList <>();
-        for (short i = 0; i < this._childrens.size(); i++) {
-            ArrayList <Double> temp = new ArrayList <>(this._childrens.get(i));
+        for (short i = 0; i < chromosomes.size(); i++) {
+            ArrayList <Double> temp = new ArrayList<>(chromosomes.get(i));
             for (short j = 0; j < temp.size(); j++) {
                 Double random = r.nextDouble();
                 if (random < this._probability_of_mutation)
                     temp.set(j, (temp.get(j) == 0.0 ? 1.0 : 0.0));
             }
-            mutationChildrens.add(temp);
+            mutatedChromosomes.add(temp);
         }
         
-        return true;
-    }
-    
-    private ArrayList <ArrayList <Double>> mutation(ArrayList <ArrayList <Double>> chromosomes) {
-        Random r = new Random();
-        Double probability_of_mutation = r.nextDouble();
-        
-        ArrayList <ArrayList <Double>> mutationChildrens = new ArrayList <>();
-        for (short i = 0; i < chromosomes.size(); i++) {
-            ArrayList <Double> temp = new ArrayList <>(chromosomes.get(i));
-            for (short j = 0; j < temp.size(); j++) {
-                Double random = r.nextDouble();
-                if (random < probability_of_mutation)
-                    temp.set(j, (temp.get(j) == 0.0 ? 1.0 : 0.0));
-            }
-            
-            mutationChildrens.add(temp);
-        }
-        
-        return mutationChildrens;
+        return mutatedChromosomes;
     }
     
     private boolean elitism() {
