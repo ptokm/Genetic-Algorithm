@@ -12,21 +12,34 @@ public class Population {
                     cumulativeSum     
      */
     private ArrayList <ArrayList <Double>> _population;
-    private ArrayList <ArrayList <Double>> _selectedPopulation;
-    private ArrayList <ArrayList <Double>> _childrens;
+    private ArrayList <ArrayList <Double>> _newPopulation;
     private final int _countOfGeneOfChromosome;
     private final Double _elitism_ratio;
     private Double _probability_of_mutation;
     private final int _maxEpoches;
+    private final String _crossoverOption;
+    private final String _fitnessOption;
     
-    Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessFunctionOption) {
+    Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessOption, String crossoverOption) {
         this._population = new ArrayList <>();
+        this._newPopulation = new ArrayList <>();
         this._countOfGeneOfChromosome = geneSize;
+        this._crossoverOption = crossoverOption;
+        this._fitnessOption = fitnessOption;
         this._elitism_ratio = 0.1;
         this._maxEpoches = 1;
         
+        this.restrictions();
         this.initializePopulation(populationSize, initializeGeneOption);
-        this.calculateFitness(fitnessFunctionOption);
+    }
+    
+    private boolean restrictions() {
+        if (this._countOfGeneOfChromosome <= 2 && this._crossoverOption.equals("double_point")) {
+            System.out.println("Cannot use double point crossover. The number of chromosomes' genes is not sufficient.");
+            return false;
+        }
+        
+        return true;
     }
     
     // Initialization can be either all genes in same specific double value
@@ -110,11 +123,11 @@ public class Population {
         return true;
     }
     
-    public boolean startOptimization(String crossoverFunction) {
+    public boolean startOptimization() {
         for (short i = 0; i < this._maxEpoches; i++) {
-            this.rouletteWheel(2);
-            this.crossover(crossoverFunction);
-            this._population = this.mutation(this._population);
+            this.calculateFitness(this._fitnessOption);
+            this.rouletteWheel();
+            this._newPopulation = this.mutation(this._newPopulation);
             this.elitism();   
         }
         
@@ -126,14 +139,15 @@ public class Population {
         for (ArrayList <Double> chromosome : this._population)
             sumNormalizedFitnessValue += chromosome.get(this._countOfGeneOfChromosome + 1);
         
-        return (sumNormalizedFitnessValue == 1.0);
+        return (sumNormalizedFitnessValue >= 1.0);
     }
     
     private boolean fitnessScaling() {
         boolean hasNegativeFitnessValue = false;
-        for (ArrayList <Double> chromosome : this._population)
+        for (ArrayList <Double> chromosome : this._population) {
             if (chromosome.get(this._countOfGeneOfChromosome) < 0)
                 hasNegativeFitnessValue = true;
+        }
         
         if (hasNegativeFitnessValue) {
             double minFitnessValue = this._population.get(0).get(this._countOfGeneOfChromosome);
@@ -188,91 +202,88 @@ public class Population {
         return (this._population.get(0).get(this._countOfGeneOfChromosome + 2) >= 1.0);
     }
     
-    private boolean selectChromosomes(int numberOfSelection ) {
-        this._selectedPopulation = new ArrayList <>();
+    private boolean selectChromosomes() {
+        ArrayList <ArrayList <Double>> selectedPopulation = new ArrayList <>();
         ArrayList <ArrayList <Double>> tempPopulation = new ArrayList <>(this._population);
         
-        for (short i = 0; i < numberOfSelection; i++) {
+        for (short i = 0; i < this._population.size(); i++) {
             Double random = Math.random(); // Random value in [0,1]
             
             for (short j = 0; j < tempPopulation.size(); j++) {
                 if (random > tempPopulation.get(j).get(this._countOfGeneOfChromosome + 1)) {
-                    this._selectedPopulation.add(tempPopulation.get(j));
+                    selectedPopulation.add(tempPopulation.get(j));
                     tempPopulation.remove(j);
                     break;
                 }     
             }
         }
         
-        return (!this._selectedPopulation.isEmpty());
+        this.crossover(selectedPopulation);
+        return (!selectedPopulation.isEmpty());
     }
     
-    private boolean rouletteWheel(int numberOfChromosomesToBeSelected) {
+    private boolean rouletteWheel() {
         this.fitnessScaling();
         this.normalizeFitnessValues();
         this.calculateCumulativeSumOfNormalizedFitnessValues();
-        this.selectChromosomes(numberOfChromosomesToBeSelected);
+        for (int i = 0; i < this._population.size() / 2; i++)
+            this.selectChromosomes();
+        
         return true;
     }
 
-    private boolean singlePointCrossover(int randomGenePosition) {
+    private boolean singlePointCrossover(ArrayList <ArrayList <Double>> selectedChromosomes, int randomGenePosition) {
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
         for (short i = 0; i < randomGenePosition; i++) {
-            child1.add(this._selectedPopulation.get(0).get(i));
-            child2.add(this._selectedPopulation.get(1).get(i));
+            child1.add(selectedChromosomes.get(0).get(i));
+            child2.add(selectedChromosomes.get(1).get(i));
         }
         for (int i = randomGenePosition; i < this._countOfGeneOfChromosome; i++) {
-            child1.add(this._selectedPopulation.get(1).get(i));
-            child2.add(this._selectedPopulation.get(0).get(i));
+            child1.add(selectedChromosomes.get(1).get(i));
+            child2.add(selectedChromosomes.get(0).get(i));
         }
 
-        this._childrens.add(child1);
-        this._childrens.add(child2);
+        this._newPopulation.add(child1);
+        this._newPopulation.add(child2);
         
         return true;
     }
     
-    private boolean doublePointCrossover(int randomGenePosition, int secondRandomGenePosition) {
+    private boolean doublePointCrossover(ArrayList <ArrayList <Double>> selectedChromosomes, int randomGenePosition, int secondRandomGenePosition) {
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
         for (short i = 0; i < randomGenePosition; i++) {
-            child1.add(this._selectedPopulation.get(0).get(i));
-            child2.add(this._selectedPopulation.get(1).get(i));
+            child1.add(selectedChromosomes.get(0).get(i));
+            child2.add(selectedChromosomes.get(1).get(i));
         }
         for (int i = randomGenePosition; i < secondRandomGenePosition; i++) {
-            child1.add(this._selectedPopulation.get(1).get(i));
-            child2.add(this._selectedPopulation.get(0).get(i));
+            child1.add(selectedChromosomes.get(1).get(i));
+            child2.add(selectedChromosomes.get(0).get(i));
         }
         for (int i = secondRandomGenePosition; i < this._countOfGeneOfChromosome; i++) {
-            child1.add(this._selectedPopulation.get(0).get(i));
-            child2.add(this._selectedPopulation.get(1).get(i));
+            child1.add(selectedChromosomes.get(0).get(i));
+            child2.add(selectedChromosomes.get(1).get(i));
         }
 
-        this._childrens.add(child1);
-        this._childrens.add(child2);
+        this._newPopulation.add(child1);
+        this._newPopulation.add(child2);
         
         return true;
     }
     
     //Produce 2 childrens from 2 parents
-    private boolean crossover(String crossoverOption) {
-        if (this._countOfGeneOfChromosome <= 2 && crossoverOption.equals("double_point")) {
-            System.out.println("Cannot use double point crossover. The number of chromosomes' genes is not sufficient.");
-            return false;
-        }
-        
-        this._childrens = new ArrayList<>();
+    private boolean crossover(ArrayList <ArrayList <Double>> selectedChromosomes) {
         Random r = new Random();
         int min = 1;
-        int max = this._countOfGeneOfChromosome - 1;
+        int max = this._countOfGeneOfChromosome;
         int randomGenePosition = r.nextInt((max - min) + 1) + min;
         
-        switch (crossoverOption) {
+        switch (this._crossoverOption) {
             case "single_point" ->  {             
-                this.singlePointCrossover(randomGenePosition);
+                this.singlePointCrossover(selectedChromosomes, randomGenePosition);
                 break;
             }
             case "double_point" -> {
@@ -287,11 +298,11 @@ public class Population {
                     secondRandomGenePosition = temp;
                 }
                                
-                this.doublePointCrossover(randomGenePosition, secondRandomGenePosition);         
+                this.doublePointCrossover(selectedChromosomes, randomGenePosition, secondRandomGenePosition);         
                 break;
             }
             default ->  { // single_point
-                this.singlePointCrossover(randomGenePosition);
+                this.singlePointCrossover(selectedChromosomes, randomGenePosition);
                 break;
             }
         }
@@ -318,13 +329,23 @@ public class Population {
     }
     
     private boolean elitism() {
+        ArrayList <ArrayList <Double>> newGenePopulation = new ArrayList <>();
         Double x = this._population.size() * this._elitism_ratio;
         int number_of_elitism_chromosomes = x.intValue();
 
-        ArrayList <ArrayList <Double>> elitismPopulation = new ArrayList <>();
         for (short i = 0; i < number_of_elitism_chromosomes; i++) {
-            elitismPopulation.add(this._population.get(i));
+            ArrayList <Double> temp = new ArrayList <>();
+            for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
+                temp.add(this._population.get(i).get(j));
+            }
+            newGenePopulation.add(temp);
         }
+        for (int i = number_of_elitism_chromosomes; i < this._population.size(); i++) {
+            newGenePopulation.add(this._newPopulation.get(i));
+        }
+        
+        this._population = new ArrayList <>(newGenePopulation);
+        this._newPopulation = new ArrayList <>();
         
         return true;
     }

@@ -54,8 +54,8 @@ public class GeneticAlgorithm {
                 default -> crossoverFunctionOption = "single_point";
             }
 
-            Population population = new Population(chromosomesCount, genesCount, initializeGenesOption, fitnessFunctionOption);
-            population.startOptimization(crossoverFunctionOption);
+            Population population = new Population(chromosomesCount, genesCount, initializeGenesOption, fitnessFunctionOption, crossoverFunctionOption);
+            population.startOptimization();
         }
         catch (InputMismatchException e)
         {
