@@ -183,7 +183,7 @@ public class Genetic_Algorithm {
 
         for (int i = 0; i < this._population.size(); i++) {
             ArrayList <Double> inner = new ArrayList <> (this._population.get(i));
-            inner.add(inner.get(this._countOfGeneOfChromosome) / sumFitnessValue);
+            inner.set(this._countOfGeneOfChromosome + 1, inner.get(this._countOfGeneOfChromosome) / sumFitnessValue);
             this._population.set(i, inner);
         }
         
@@ -202,7 +202,7 @@ public class Genetic_Algorithm {
             for (int j = (i + 1); j < this._population.size(); j++) {
                 sum += this._population.get(j).get(this._countOfGeneOfChromosome + 1);
             }
-            temp.add(sum);
+            temp.set(this._countOfGeneOfChromosome + 2, sum);
             this._population.set(i, temp);
         }
         
