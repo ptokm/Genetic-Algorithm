@@ -7,53 +7,58 @@ Population  -->     [Chromosome 1, Chromosome 2, ....., Chromosome M]
 where Chromosome --> 
                     [ Gene 1, Gene 2, ..., ..., Gene N]
 
+* If all chromosomes' genes are the same, do mutation (# Step 5)
 
-### Step 2: Calculate fitness for each Chromosome
+*******************************************************************************
 
-That's for a simple example is a sum of each gene of specific chromosome
+For each epoch
 
+  ### Step 2: Calculate fitness for each Chromosome
 
-### Step 3: Selection
-
-                                                         Roulette wheel
-
-3.1 Fitness Scaling 
-     
-    If there is a negative fitness value for some chromosome, then edit all fitness values as follows
-         fitness value = 1.0 * fitness_value + min(fitness_values) + 1
-
-3.2 Normalize the finess value of each Chromosome
-
-     normalization = fitness_value / sum_of_all_fitness_value_of_chromosomes
-
-3.3 Calculate the cumulative sum for each Chromosome
-
-     Chromosome 1 has cumulative sum = cumulative_sum_of_chromosome1 + ... + cumulative_sum_of_chromosomeN
-
-     Chromosome 2 has cumulative sum = cumulative_sum_of_chromosome2 + ... + cumulative_sum_of_chromosomeN
-
-     ....
-
-     Chromosome M has cumulative sum = cumulative_sum_of_chromosomeN
+  That's for a simple example is a sum of each gene of specific chromosome
 
 
-3.4 Select x of Chromosomes
+  ### Step 3: Selection
 
-      ForEach (x)
+                                                           Roulette wheel
 
-        * Take  a random value
+  3.1 Fitness Scaling 
 
-        * If that random value > cumulative_sum_of_some_chromosome Then
-           Take that Chromosome
+      If there is a negative fitness value for some chromosome, then edit all fitness values as follows
+           fitness value = 1.0 * fitness_value + min(fitness_values) + 1
 
-### Step 4: Crossover
+  3.2 Normalize the finess value of each Chromosome
 
-For the selected chromosomes, do crossover with random single or double points and produce childs
+       normalization = fitness_value / sum_of_all_fitness_value_of_chromosomes
 
-### Step 5: Mutation
+  3.3 Calculate the cumulative sum for each Chromosome
 
-For the produced children's, randomly change some genes
+       Chromosome 1 has cumulative sum = cumulative_sum_of_chromosome1 + ... + cumulative_sum_of_chromosomeN
 
-### Step 6: Elitism
+       Chromosome 2 has cumulative sum = cumulative_sum_of_chromosome2 + ... + cumulative_sum_of_chromosomeN
 
-Choose the best x chromosomes from the previous epoch and transfer them to the next epoch without crossover/mutation/elitism
+       ....
+
+       Chromosome M has cumulative sum = cumulative_sum_of_chromosomeN
+
+
+  3.4 Select x of Chromosomes(as many as population's chromosomes are)
+
+        ForEach (x)
+
+          * Take  a random value
+
+          * If that random value > cumulative_sum_of_some_chromosome Then
+             Take that Chromosome
+
+  ### Step 4: Crossover
+
+  For the selected chromosomes (of the previous step), do crossover with random single or double points and produce childs
+
+  ### Step 5: Mutation
+
+  For the produced children's, randomly change some genes
+
+  ### Step 6: Elitism
+
+  Choose the best x chromosomes from the previous epoch and transfer them to the next epoch without crossover/mutation/elitism
