@@ -9,11 +9,14 @@ import java.util.Scanner;
  */
 public class GeneticAlgorithm {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); 
-        
+    public static void main(String[] args) { 
         System.out.println("WELCOME TO GENETIC ALGOTITHM");
-        
+        GeneticAlgorithm.interactionWithUser();
+        System.out.println("THANK'S USING OUR GENETIC ALGORITHM");
+    }
+    
+    private static boolean interactionWithUser () {
+        Scanner scanner = new Scanner(System.in);
         try
         {
             System.out.println("How many chromosomes do you want to use?");
@@ -54,15 +57,16 @@ public class GeneticAlgorithm {
                 default -> crossoverFunctionOption = "single_point";
             }
 
-            Population population = new Population(chromosomesCount, genesCount, initializeGenesOption, fitnessFunctionOption, crossoverFunctionOption);
+            Population population = new Population(chromosomesCount, genesCount, initializeGenesOption, 
+                                                   fitnessFunctionOption, crossoverFunctionOption);
             population.startOptimization();
         }
         catch (InputMismatchException e)
         {
             System.out.println("Invalid option!");
+            return false;
         }
         
-        System.out.println("THANK'S USING OUR GENETIC ALGORITHM");
+        return true;
     }
-    
 }
