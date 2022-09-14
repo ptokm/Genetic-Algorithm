@@ -350,11 +350,7 @@ public class Genetic_Algorithm {
         int number_of_elitism_chromosomes = x.intValue();
 
         for (int i = 0; i < number_of_elitism_chromosomes; i++) {
-            ArrayList <Double> temp = new ArrayList <>();
-            for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
-                temp.add(oldPopulation.get(i).get(j));
-            }
-            newGenePopulation.add(temp);
+            newGenePopulation.add(oldPopulation.get(i));
         }
         for (int i = number_of_elitism_chromosomes; i < this._population.size(); i++) {
             newGenePopulation.add(newPopulation.get(i));
