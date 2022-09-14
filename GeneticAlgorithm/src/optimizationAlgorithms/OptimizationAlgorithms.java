@@ -1,6 +1,8 @@
 package optimizationAlgorithms;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -59,7 +61,10 @@ public class OptimizationAlgorithms {
 
             Genetic_Algorithm genAlg = new Genetic_Algorithm(chromosomesCount, genesCount, initializeGenesOption, 
                                                    fitnessFunctionOption, crossoverFunctionOption);
-            genAlg.startOptimization();
+            ArrayList <Double> bestChromosome = genAlg.findBestChromosome();
+            List <Double> bestChromosomeGenes = bestChromosome.subList(0, genesCount);
+            System.out.println("The best chromosome is " + bestChromosomeGenes + 
+                    "\nwith fitness value of " + bestChromosome.get(genesCount));
         }
         catch (InputMismatchException e)
         {
