@@ -320,7 +320,7 @@ public class Genetic_Algorithm {
         
         for (int i = 0; i < chromosomes.size(); i++) {
             ArrayList <Double> temp = new ArrayList<>(chromosomes.get(i));
-            for (int j = 0; j < temp.size(); j++) {
+            for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
                 Double random = r.nextDouble();
                 if (random < this._probability_of_mutation)
                     temp.set(j, (temp.get(j) == 0.0 ? 1.0 : 0.0));
