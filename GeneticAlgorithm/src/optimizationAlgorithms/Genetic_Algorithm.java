@@ -251,6 +251,10 @@ public class Genetic_Algorithm {
             child1.add(selectedChromosomes.get(1).get(i));
             child2.add(selectedChromosomes.get(0).get(i));
         }
+        for (int i = 0; i < 3; i++) {
+            child1.add(-1.0);
+            child2.add(-1.0);
+        }
 
         this._newPopulation.add(child1);
         this._newPopulation.add(child2);
@@ -275,6 +279,11 @@ public class Genetic_Algorithm {
             child2.add(selectedChromosomes.get(1).get(i));
         }
 
+        for (int i = 0; i < 3; i++) {
+            child1.add(-1.0);
+            child2.add(-1.0);
+        }
+        
         this._newPopulation.add(child1);
         this._newPopulation.add(child2);
         
