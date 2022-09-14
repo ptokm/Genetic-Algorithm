@@ -127,8 +127,7 @@ public class Genetic_Algorithm {
         return true;
     }
     
-    public ArrayList <Double> findBestChromosome() {
-        
+    public double findBestChromosome() {
         for (int i = 0; i < this._maxEpoches; i++) {
             this.calculateFitness(this._fitnessOption);
             this.rouletteWheel();
@@ -138,7 +137,7 @@ public class Genetic_Algorithm {
             this._newPopulation = new ArrayList <>();
         }
         
-        return this._population.get(0);
+        return this.calculateErrorPercentage(this._population.get(0).get(this._countOfGeneOfChromosome));
     }
     
     private boolean validateNormalizedFitnessValues() {
@@ -359,5 +358,9 @@ public class Genetic_Algorithm {
         
         return newGenePopulation;
     }
-             
+     
+    private double calculateErrorPercentage(double fitnessValue) {
+        double bestSum = this._countOfGeneOfChromosome;
+        return (Math.abs(fitnessValue - bestSum) / bestSum) * 100;
+    }
 }

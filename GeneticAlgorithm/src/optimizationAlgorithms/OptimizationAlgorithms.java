@@ -61,10 +61,8 @@ public class OptimizationAlgorithms {
 
             Genetic_Algorithm genAlg = new Genetic_Algorithm(chromosomesCount, genesCount, initializeGenesOption, 
                                                    fitnessFunctionOption, crossoverFunctionOption);
-            ArrayList <Double> bestChromosome = genAlg.findBestChromosome();
-            List <Double> bestChromosomeGenes = bestChromosome.subList(0, genesCount);
-            System.out.println("The best chromosome is " + bestChromosomeGenes + 
-                    "\nwith fitness value of " + bestChromosome.get(genesCount));
+            double errorPercentage = genAlg.findBestChromosome();
+            System.out.println("Error: " + errorPercentage + "%");
         }
         catch (InputMismatchException e)
         {
