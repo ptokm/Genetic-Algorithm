@@ -132,7 +132,6 @@ public class Genetic_Algorithm {
             this.calculateFitness(this._fitnessOption);
             this.rouletteWheel();
             this._newPopulation = this.mutation(this._newPopulation);
-            this.elitism();   
             this._newPopulation = this.elitism(this._population, this._newPopulation);
             this._population = this._newPopulation;
             this._newPopulation = new ArrayList <>();
@@ -342,28 +341,6 @@ public class Genetic_Algorithm {
         }
         
         return mutatedChromosomes;
-    }
-    
-    private boolean elitism() {
-        ArrayList <ArrayList <Double>> newGenePopulation = new ArrayList <>();
-        Double x = this._population.size() * this._elitism_ratio;
-        int number_of_elitism_chromosomes = x.intValue();
-
-        for (int i = 0; i < number_of_elitism_chromosomes; i++) {
-            ArrayList <Double> temp = new ArrayList <>();
-            for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
-                temp.add(this._population.get(i).get(j));
-            }
-            newGenePopulation.add(temp);
-        }
-        for (int i = number_of_elitism_chromosomes; i < this._population.size(); i++) {
-            newGenePopulation.add(this._newPopulation.get(i));
-        }
-        
-        this._population = new ArrayList <>(newGenePopulation);
-        this._newPopulation = new ArrayList <>();
-        
-        return true;
     }
     
     private ArrayList <ArrayList <Double>> elitism(ArrayList <ArrayList <Double>> oldPopulation,
