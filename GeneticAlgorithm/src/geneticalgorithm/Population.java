@@ -54,20 +54,20 @@ public class Population {
             }
             
             ArrayList <Double> chromosome = new ArrayList <>();
-            for (short i = 0; i < this._countOfGeneOfChromosome; i++)
+            for (int i = 0; i < this._countOfGeneOfChromosome; i++)
                 chromosome.add(initializationValue);
             
-            for (short i = 0; i < populationSize; i++)
+            for (int i = 0; i < populationSize; i++)
                 this._population.add(chromosome);
             
             this._population = this.mutation(this._population);
         } else {
             int min = 0;
             int max = 1;
-            for (short i = 0; i < populationSize; i++) {
+            for (int i = 0; i < populationSize; i++) {
                 ArrayList <Double> chromosome = new ArrayList <>();
                 Random r = new Random();
-                for (short j = 0; j < this._countOfGeneOfChromosome; j++)
+                for (int j = 0; j < this._countOfGeneOfChromosome; j++)
                     chromosome.add((r.nextDouble((max - min) + 1) + min >= 0.5) ? 1.0 : 0.0);
                 this._population.add(chromosome);
             }
@@ -77,10 +77,10 @@ public class Population {
     }
     
     private boolean sumationOfGenesFitness() {
-        for (short i = 0; i < this._population.size(); i++) {
+        for (int i = 0; i < this._population.size(); i++) {
             ArrayList <Double> temp = new ArrayList <> (this._population.get(i));
             double sum = 0.0;
-            for (short j = 0; j < temp.size(); j++) {
+            for (int j = 0; j < temp.size(); j++) {
                 sum += temp.get(j);
             }
             temp.add(sum);
@@ -91,10 +91,10 @@ public class Population {
     }
     
     private boolean sumationOfSquareGenesFitness() {
-        for (short i = 0; i < this._population.size(); i++) {
+        for (int i = 0; i < this._population.size(); i++) {
             ArrayList <Double> temp = new ArrayList <> (this._population.get(i));
             double sum = 0.0;
-            for (short j = 0; j < temp.size(); j++) {
+            for (int j = 0; j < temp.size(); j++) {
                 sum += Math.pow(temp.get(j), 2);
             }
             temp.add(sum);
@@ -124,7 +124,7 @@ public class Population {
     }
     
     public boolean startOptimization() {
-        for (short i = 0; i < this._maxEpoches; i++) {
+        for (int i = 0; i < this._maxEpoches; i++) {
             this.calculateFitness(this._fitnessOption);
             this.rouletteWheel();
             this._newPopulation = this.mutation(this._newPopulation);
@@ -151,13 +151,13 @@ public class Population {
         
         if (hasNegativeFitnessValue) {
             double minFitnessValue = this._population.get(0).get(this._countOfGeneOfChromosome);
-            for (short i = 0; i < this._population.size(); i++) {
+            for (int i = 0; i < this._population.size(); i++) {
                 if (this._population.get(i).get(this._countOfGeneOfChromosome) < minFitnessValue)
                     minFitnessValue = this._population.get(i).get(this._countOfGeneOfChromosome);
             }
             
             minFitnessValue = Math.abs(minFitnessValue);
-            for (short i = 0; i < this._population.size(); i++) {
+            for (int i = 0; i < this._population.size(); i++) {
                 double scaledFitnessValue = 1.0 * this._population.get(i).get(this._countOfGeneOfChromosome) + minFitnessValue + 1; // +1 to avoid devide by zero after
                 this._population.get(i).set(this._countOfGeneOfChromosome, scaledFitnessValue);
             }
@@ -174,7 +174,7 @@ public class Population {
             sumFitnessValue += chromosome.get(this._countOfGeneOfChromosome);
         }
 
-        for (short i = 0; i < this._population.size(); i++) {
+        for (int i = 0; i < this._population.size(); i++) {
             ArrayList <Double> inner = new ArrayList <> (this._population.get(i));
             inner.add(inner.get(this._countOfGeneOfChromosome) / sumFitnessValue);
             this._population.set(i, inner);
@@ -206,10 +206,10 @@ public class Population {
         ArrayList <ArrayList <Double>> selectedPopulation = new ArrayList <>();
         ArrayList <ArrayList <Double>> tempPopulation = new ArrayList <>(this._population);
         
-        for (short i = 0; i < this._population.size(); i++) {
+        for (int i = 0; i < this._population.size(); i++) {
             Double random = Math.random(); // Random value in [0,1]
             
-            for (short j = 0; j < tempPopulation.size(); j++) {
+            for (int j = 0; j < tempPopulation.size(); j++) {
                 if (random > tempPopulation.get(j).get(this._countOfGeneOfChromosome + 1)) {
                     selectedPopulation.add(tempPopulation.get(j));
                     tempPopulation.remove(j);
@@ -236,7 +236,7 @@ public class Population {
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
-        for (short i = 0; i < randomGenePosition; i++) {
+        for (int i = 0; i < randomGenePosition; i++) {
             child1.add(selectedChromosomes.get(0).get(i));
             child2.add(selectedChromosomes.get(1).get(i));
         }
@@ -255,7 +255,7 @@ public class Population {
         ArrayList <Double> child1 = new ArrayList <>();
         ArrayList <Double> child2 = new ArrayList <>();
 
-        for (short i = 0; i < randomGenePosition; i++) {
+        for (int i = 0; i < randomGenePosition; i++) {
             child1.add(selectedChromosomes.get(0).get(i));
             child2.add(selectedChromosomes.get(1).get(i));
         }
@@ -315,9 +315,9 @@ public class Population {
         Random r = new Random();
         this._probability_of_mutation = r.nextDouble();
         
-        for (short i = 0; i < chromosomes.size(); i++) {
+        for (int i = 0; i < chromosomes.size(); i++) {
             ArrayList <Double> temp = new ArrayList<>(chromosomes.get(i));
-            for (short j = 0; j < temp.size(); j++) {
+            for (int j = 0; j < temp.size(); j++) {
                 Double random = r.nextDouble();
                 if (random < this._probability_of_mutation)
                     temp.set(j, (temp.get(j) == 0.0 ? 1.0 : 0.0));
@@ -333,7 +333,7 @@ public class Population {
         Double x = this._population.size() * this._elitism_ratio;
         int number_of_elitism_chromosomes = x.intValue();
 
-        for (short i = 0; i < number_of_elitism_chromosomes; i++) {
+        for (int i = 0; i < number_of_elitism_chromosomes; i++) {
             ArrayList <Double> temp = new ArrayList <>();
             for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
                 temp.add(this._population.get(i).get(j));
