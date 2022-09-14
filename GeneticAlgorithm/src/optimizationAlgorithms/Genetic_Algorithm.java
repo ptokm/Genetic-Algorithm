@@ -80,10 +80,10 @@ public class Genetic_Algorithm {
         for (int i = 0; i < this._population.size(); i++) {
             ArrayList <Double> temp = new ArrayList <> (this._population.get(i));
             double sum = 0.0;
-            for (int j = 0; j < temp.size(); j++) {
+            for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
                 sum += temp.get(j);
             }
-            temp.add(sum);
+            temp.set(this._countOfGeneOfChromosome, sum);
             this._population.set(i, temp);
         }
         
@@ -94,10 +94,10 @@ public class Genetic_Algorithm {
         for (int i = 0; i < this._population.size(); i++) {
             ArrayList <Double> temp = new ArrayList <> (this._population.get(i));
             double sum = 0.0;
-            for (int j = 0; j < temp.size(); j++) {
+            for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
                 sum += Math.pow(temp.get(j), 2);
             }
-            temp.add(sum);
+            temp.set(this._countOfGeneOfChromosome, sum);
             this._population.set(i, temp);
         }
         
