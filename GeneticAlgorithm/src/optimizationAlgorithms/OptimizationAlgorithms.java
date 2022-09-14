@@ -1,4 +1,4 @@
-package geneticalgorithm;
+package optimizationAlgorithms;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -7,11 +7,11 @@ import java.util.Scanner;
  *
  * @author Paraskevi Tokmakidou
  */
-public class GeneticAlgorithm {
+public class OptimizationAlgorithms {
 
     public static void main(String[] args) { 
         System.out.println("WELCOME TO GENETIC ALGOTITHM");
-        GeneticAlgorithm.interactionWithUser();
+        OptimizationAlgorithms.interactionWithUser();
         System.out.println("THANK'S USING OUR GENETIC ALGORITHM");
     }
     
@@ -57,9 +57,9 @@ public class GeneticAlgorithm {
                 default -> crossoverFunctionOption = "single_point";
             }
 
-            Population population = new Population(chromosomesCount, genesCount, initializeGenesOption, 
+            Genetic_Algorithm genAlg = new Genetic_Algorithm(chromosomesCount, genesCount, initializeGenesOption, 
                                                    fitnessFunctionOption, crossoverFunctionOption);
-            population.startOptimization();
+            genAlg.startOptimization();
         }
         catch (InputMismatchException e)
         {

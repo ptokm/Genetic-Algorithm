@@ -1,10 +1,10 @@
-package geneticalgorithm;
+package optimizationAlgorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Population {
+public class Genetic_Algorithm {
     /**
      * _population: Chromosomes (size: geneSize),
                     fitness { The evaluate value of each chromosome in population } , 
@@ -20,7 +20,7 @@ public class Population {
     private final String _crossoverOption;
     private final String _fitnessOption;
     
-    Population(int populationSize, int geneSize,  String initializeGeneOption, String fitnessOption, String crossoverOption) {
+    Genetic_Algorithm(int populationSize, int geneSize,  String initializeGeneOption, String fitnessOption, String crossoverOption) {
         this._population = new ArrayList <>();
         this._newPopulation = new ArrayList <>();
         this._countOfGeneOfChromosome = geneSize;
