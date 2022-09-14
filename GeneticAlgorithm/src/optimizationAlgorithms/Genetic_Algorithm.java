@@ -56,6 +56,8 @@ public class Genetic_Algorithm {
             ArrayList <Double> chromosome = new ArrayList <>();
             for (int i = 0; i < this._countOfGeneOfChromosome; i++)
                 chromosome.add(initializationValue);
+            for (int i = 0; i < 3; i++)
+                chromosome.add(-1.0);
             
             for (int i = 0; i < populationSize; i++)
                 this._population.add(chromosome);
@@ -69,6 +71,8 @@ public class Genetic_Algorithm {
                 Random r = new Random();
                 for (int j = 0; j < this._countOfGeneOfChromosome; j++)
                     chromosome.add((r.nextDouble((max - min) + 1) + min >= 0.5) ? 1.0 : 0.0);
+                for (int k = 0; k < 3; k++)
+                    chromosome.add(-1.0);
                 this._population.add(chromosome);
             }
         }
