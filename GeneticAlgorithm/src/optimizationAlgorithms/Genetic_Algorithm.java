@@ -27,7 +27,7 @@ public class Genetic_Algorithm {
         this._crossoverOption = crossoverOption;
         this._fitnessOption = fitnessOption;
         this._elitism_ratio = 0.1;
-        this._maxEpoches = 1;
+        this._maxEpoches = 100;
         
         this.restrictions();
         this.initializePopulation(populationSize, initializeGeneOption);
