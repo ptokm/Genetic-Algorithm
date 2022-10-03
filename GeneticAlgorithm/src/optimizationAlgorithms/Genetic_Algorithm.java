@@ -19,6 +19,7 @@ public class Genetic_Algorithm {
     private final int _maxEpoches;
     private final String _crossoverOption;
     private final String _fitnessOption;
+    private final int _parentsCount;
     
     Genetic_Algorithm(int populationSize, int geneSize,  String initializeGeneOption, String fitnessOption, String crossoverOption) {
         this._population = new ArrayList <>();
@@ -28,6 +29,7 @@ public class Genetic_Algorithm {
         this._fitnessOption = fitnessOption;
         this._elitism_ratio = 0.1;
         this._maxEpoches = 100;
+        this._parentsCount = 2;
         
         this.restrictions();
         this.initializePopulation(populationSize, initializeGeneOption);
@@ -212,8 +214,8 @@ public class Genetic_Algorithm {
         ArrayList <ArrayList <Double>> selectedPopulation = new ArrayList <>();
         ArrayList <ArrayList <Double>> tempPopulation = new ArrayList <>(this._population);
         
-        for (int i = 0; i < this._population.size(); i++) {
-            Double random = Math.random(); // Random value in [0,1]
+        while (tempPopulation.size() != this._parentsCount) {
+           Double random = Math.random(); // Random value in [0,1]
             
             for (int j = 0; j < tempPopulation.size(); j++) {
                 if (random > tempPopulation.get(j).get(this._countOfGeneOfChromosome + 1)) {
@@ -232,8 +234,9 @@ public class Genetic_Algorithm {
         this.fitnessScaling();
         this.normalizeFitnessValues();
         this.calculateCumulativeSumOfNormalizedFitnessValues();
-        for (int i = 0; i < this._population.size() / 2; i++)
+        while (this._newPopulation.size() != this._population.size()) {
             this.selectChromosomes();
+        }
         
         return true;
     }
