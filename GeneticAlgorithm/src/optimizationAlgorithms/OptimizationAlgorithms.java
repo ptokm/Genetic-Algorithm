@@ -30,20 +30,29 @@ public class OptimizationAlgorithms {
                 int genesCount = scanner.nextInt();
                 if (genesCount == -1)
                     break;
-
+                
                 String initializeGenesOption = "";
                 while ( ! (initializeGenesOption.equalsIgnoreCase("0") || 
                         initializeGenesOption.equalsIgnoreCase("1") ||
-                        initializeGenesOption.equalsIgnoreCase("random"))) {
+                        initializeGenesOption.equalsIgnoreCase("random") ||
+                        initializeGenesOption.startsWith("random_continuous"))) {
                     System.out.println("Enter the appropriate number from the list to select the initialization value of each chromosomes genes:");
                     System.out.println("1 - Initialize all to value: 0");
                     System.out.println("2 - Initialize all to value: 1");
                     System.out.println("3 - Initialize all to random values 0 or 1");
+                    System.out.println("4 - Initialize all to random continues values in range");
 
                     switch (scanner.nextInt()) {
                         case 1  -> initializeGenesOption = "0";
                         case 2  -> initializeGenesOption = "1";
                         case 3  -> initializeGenesOption = "random";
+                        case 4  -> {
+                            System.out.println("Enter minimum range for all genes");
+                            Double minRange = scanner.nextDouble();
+                            System.out.println("Enter maximum range for all genes");
+                            Double maxRange = scanner.nextDouble();
+                            initializeGenesOption = "random_continuous[" + minRange + "," + maxRange + "]";
+                        }
                         case -1 -> { break; }
                     }
                 }

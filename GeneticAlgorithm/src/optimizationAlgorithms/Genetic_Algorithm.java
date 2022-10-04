@@ -2,6 +2,7 @@ package optimizationAlgorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Random;
 
 public class Genetic_Algorithm {
@@ -44,6 +45,19 @@ public class Genetic_Algorithm {
         return true;
     }
     
+    // Initialize with default values the needed metrics for population
+    private boolean setDefaultValueForMetricsOfPopulation() {
+        for (int i = 0; i < this._population.size(); i++) {
+            ArrayList <Double> temp = new ArrayList<>(this._population.get(i));
+            for (int j = 0; j < 3; j++) {
+                temp.add(-1.0);
+            }
+            this._population.set(i, temp);
+        }
+        
+        return true;
+    }
+    
     // Initialization can be either all genes in same specific double value
     // or in ramdom values
     private boolean initializePopulation(int populationSize, String initializeGeneOption) {
@@ -58,24 +72,57 @@ public class Genetic_Algorithm {
             ArrayList <Double> chromosome = new ArrayList <>();
             for (int i = 0; i < this._countOfGeneOfChromosome; i++)
                 chromosome.add(initializationValue);
-            for (int i = 0; i < 3; i++)
-                chromosome.add(-1.0);
             
             for (int i = 0; i < populationSize; i++)
                 this._population.add(chromosome);
             
+            this.setDefaultValueForMetricsOfPopulation();
             this._population = this.mutation(this._population);
         } else {
-            int min = 0;
-            int max = 1;
-            for (int i = 0; i < populationSize; i++) {
-                ArrayList <Double> chromosome = new ArrayList <>();
-                Random r = new Random();
-                for (int j = 0; j < this._countOfGeneOfChromosome; j++)
-                    chromosome.add((r.nextDouble((max - min) + 1) + min >= 0.5) ? 1.0 : 0.0);
-                for (int k = 0; k < 3; k++)
-                    chromosome.add(-1.0);
-                this._population.add(chromosome);
+            if (initializeGeneOption.equals("random")) {
+                int min = 0;
+                int max = 1;
+                for (int i = 0; i < populationSize; i++) {
+                    ArrayList <Double> chromosome = new ArrayList <>();
+                    Random r = new Random();
+                    for (int j = 0; j < this._countOfGeneOfChromosome; j++)
+                        chromosome.add((r.nextDouble((max - min) + 1) + min >= 0.5) ? 1.0 : 0.0);
+                    this._population.add(chromosome);
+                }
+                this.setDefaultValueForMetricsOfPopulation();
+            } else {
+                int lengthOption = "random_continuous".length();
+                String option = initializeGeneOption.substring(lengthOption + 1, initializeGeneOption.length() - 1);
+                String parts[] = option.split(",");
+                Double min;
+                Double max;
+                try {
+                    min = Double.parseDouble(parts[0]);
+                    max = Double.parseDouble(parts[1]);
+                } catch(NumberFormatException e) {
+                     min = 0.0;
+                     max = 100.0;
+                }
+                
+                if (Objects.equals(min, max)) {
+                    min = 0.0;
+                    max = 100.0;
+                }
+                
+                if (min > max) {
+                    Double temp = min;
+                    min = max;
+                    max = temp;  
+                }
+                
+                for (int i = 0; i < populationSize; i++) {
+                    ArrayList <Double> chromosome = new ArrayList <>();
+                    Random r = new Random();
+                    for (int j = 0; j < this._countOfGeneOfChromosome; j++)
+                        chromosome.add(r.nextDouble((max - min) + 1) + min);
+                    this._population.add(chromosome);
+                }
+                 this.setDefaultValueForMetricsOfPopulation();
             }
         }
         
@@ -215,7 +262,7 @@ public class Genetic_Algorithm {
         ArrayList <ArrayList <Double>> tempPopulation = new ArrayList <>(this._population);
         
         while (tempPopulation.size() != this._parentsCount) {
-           Double random = Math.random(); // Random value in [0,1]
+            Double random = Math.random(); // Random value in [0,1]
             
             for (int j = 0; j < tempPopulation.size(); j++) {
                 if (random > tempPopulation.get(j).get(this._countOfGeneOfChromosome + 1)) {
@@ -234,9 +281,8 @@ public class Genetic_Algorithm {
         this.fitnessScaling();
         this.normalizeFitnessValues();
         this.calculateCumulativeSumOfNormalizedFitnessValues();
-        while (this._newPopulation.size() != this._population.size()) {
+        while (this._newPopulation.size() != this._population.size())
             this.selectChromosomes();
-        }
         
         return true;
     }
