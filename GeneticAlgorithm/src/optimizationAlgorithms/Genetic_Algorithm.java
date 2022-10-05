@@ -115,11 +115,22 @@ public class Genetic_Algorithm {
                     max = temp;  
                 }
                 
+                ArrayList <Double> minLimitValues = new ArrayList <>();
+                for (int i = 0; i < this._countOfGeneOfChromosome; i++) {
+                    minLimitValues.add(min);
+                }
+                
+                ArrayList <Double> maxLimitValues = new ArrayList <>();
+                for (int i = 0; i < this._countOfGeneOfChromosome; i++) {
+                    maxLimitValues.add(max);
+                }
+                
                 for (int i = 0; i < populationSize; i++) {
                     ArrayList <Double> chromosome = new ArrayList <>();
                     Random r = new Random();
-                    for (int j = 0; j < this._countOfGeneOfChromosome; j++)
-                        chromosome.add(r.nextDouble((max - min) + 1) + min);
+                    for (int j = 0; j < this._countOfGeneOfChromosome; j++) {
+                        chromosome.add(r.nextDouble((maxLimitValues.get(j) - minLimitValues.get(j)) + 1) + minLimitValues.get(j));
+                    } 
                     this._population.add(chromosome);
                 }
                  this.setDefaultValueForMetricsOfPopulation();
